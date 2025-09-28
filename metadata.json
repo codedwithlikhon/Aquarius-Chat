@@ -1,0 +1,7 @@
+{
+  "name": "Aquarius AI Agent",
+  "description": "An AI agent that can read, modify, and run code to help you build faster, squash bugs, and understand unfamiliar code.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

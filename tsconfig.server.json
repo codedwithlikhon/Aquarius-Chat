@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "dist/server",
+    "jsx": "react-jsx" // Keep this if you have shared types/utils that might use JSX syntax, otherwise optional.
+  },
+  "include": ["server", "src/types.ts"] // Include server code and any shared types
+}
