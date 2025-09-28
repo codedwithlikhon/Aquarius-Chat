@@ -1,4 +1,5 @@
-import express from 'express';
+// FIX: Import Request and Response types from express to fix type errors.
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import { GoogleGenAI } from "@google/genai";
@@ -37,7 +38,8 @@ const apiLimiter = rateLimit({
 });
 
 // --- Main API Route ---
-app.post('/api/generate', apiLimiter, async (req: express.Request, res: express.Response) => {
+// FIX: Use imported Request and Response types for correct type inference.
+app.post('/api/generate', apiLimiter, async (req: Request, res: Response) => {
     const { userQuery } = req.body;
 
     if (!userQuery) {
@@ -72,7 +74,7 @@ The stream must follow this sequence:
         });
 
         // Set headers for streaming
-        res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
         res.setHeader('Transfer-Encoding', 'chunked');
 
         // Stream the response
@@ -105,7 +107,8 @@ The stream must follow this sequence:
 if (process.env.NODE_ENV === 'production') {
     const clientBuildPath = new URL('../client', import.meta.url).pathname;
     app.use(express.static(clientBuildPath));
-    app.get('*', (req: express.Request, res: express.Response) => {
+    // FIX: Use imported Request and Response types for correct type inference.
+    app.get('*', (req: Request, res: Response) => {
         res.sendFile(clientBuildPath + '/index.html');
     });
 }
