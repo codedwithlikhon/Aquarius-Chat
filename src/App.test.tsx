@@ -1,4 +1,6 @@
-/// <reference types="@testing-library/jest-dom" />
+// FIX: Removed the triple-slash directive `/// <reference types="@testing-library/jest-dom" />`
+// which was causing a "Cannot find type definition file" error.
+// The types are correctly loaded via the import in `vitest.setup.ts`.
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 // FIX: Import test globals from vitest to resolve type errors.
 import { vi, describe, it, expect } from 'vitest';

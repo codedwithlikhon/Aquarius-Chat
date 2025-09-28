@@ -1,6 +1,7 @@
 import React from 'react';
 import { SpinnerIcon, StopIcon, FolderIcon, CheckCircleIcon, PlusIcon } from './icons';
 import { RequestInput } from './RequestInput';
+import { AquariusLogoHorizontal } from './Logo';
 
 const ArchitectureCard: React.FC<{ architecture: string[] }> = ({ architecture }) => (
     <div className="bg-[#1e1e1e] rounded-lg p-4 border border-gray-700/80">
@@ -35,7 +36,7 @@ const StatusCard: React.FC<{ status: string; isCompleted: boolean; onStop: () =>
             ) : (
                 <SpinnerIcon className="w-5 h-5 mr-3 text-gray-400 animate-spin flex-shrink-0" />
             )}
-            <div className="truncate" aria-live="polite">
+            <div className="truncate">
                 <p className="text-sm font-medium text-white truncate">
                     {isCompleted ? 'Task finished' : 'Working on your task'}
                 </p>
@@ -43,12 +44,12 @@ const StatusCard: React.FC<{ status: string; isCompleted: boolean; onStop: () =>
             </div>
         </div>
         {isCompleted ? (
-             <button onClick={onReset} className="flex items-center text-xs ml-2 px-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500" aria-label="Start new task">
+             <button onClick={onReset} className="flex items-center text-xs ml-2 px-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700" aria-label="Start new task">
                 <PlusIcon className="w-4 h-4 mr-1" />
                 New Task
             </button>
         ) : (
-            <button onClick={onStop} className="p-2 ml-2 rounded-md text-gray-400 hover:bg-gray-800 hover:text-white flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-gray-500" aria-label="Stop task">
+            <button onClick={onStop} className="p-2 ml-2 rounded-md text-gray-400 hover:bg-gray-800 hover:text-white flex-shrink-0" aria-label="Stop task">
                 <StopIcon className="w-5 h-5" />
             </button>
         )}
@@ -72,8 +73,10 @@ export const Sidebar: React.FC<{
     
     return (
         <aside className="w-full md:w-1/3 md:max-w-sm flex flex-col border-r border-gray-700/50 bg-black h-full">
+            <div className="p-4 border-b border-gray-700/50">
+                <AquariusLogoHorizontal />
+            </div>
             <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-                 <h2 className="text-lg font-semibold text-white px-2">Context</h2>
                 {showArchitecture && <ArchitectureCard architecture={architecture} />}
                 {showStatus && <StatusCard status={status} isCompleted={isCompleted} onStop={onStop} onReset={onReset} />}
             </div>

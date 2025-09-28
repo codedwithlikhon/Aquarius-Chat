@@ -1,12 +1,14 @@
 import React from 'react';
 import { LogGroup } from '../types';
 import { LogEntry } from './LogEntry';
-import { WarningIcon } from './icons';
+import { WarningIcon, ChevronDownIcon } from './icons';
+import { AquariusLogoSquare } from './Logo';
 
 const WelcomeMessage: React.FC = () => (
     <div className="flex items-center justify-center h-full">
-        <div className="text-center text-gray-500">
-            <h3 className="text-xl font-semibold">Aquarius AI Agent</h3>
+        <div className="text-center text-gray-500 max-w-sm mx-auto">
+            <AquariusLogoSquare className="w-40 h-40 mx-auto mb-6" />
+            <h3 className="text-xl font-semibold text-white">Aquarius AI Agent</h3>
             <p className="mt-2 text-sm">Describe a task, bug, or question in the input box to get started.</p>
         </div>
     </div>
@@ -23,12 +25,41 @@ const ErrorDisplay: React.FC<{ error: string }> = ({ error }) => (
 )
 
 export const LogsPanel: React.FC<{ logGroups: LogGroup[], isAgentRunning: boolean, error: string | null }> = ({ logGroups, isAgentRunning, error }) => {
+    const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+    const [showScrollButton, setShowScrollButton] = React.useState(false);
+    // Use a ref to track scroll position to avoid re-rendering on every scroll event
+    const atBottomRef = React.useRef(true);
+
+    const scrollToBottom = (behavior: 'smooth' | 'auto' = 'smooth') => {
+        scrollContainerRef.current?.scrollTo({
+            top: scrollContainerRef.current.scrollHeight,
+            behavior,
+        });
+    };
+
+    const handleScroll = () => {
+        const container = scrollContainerRef.current;
+        if (container) {
+            const threshold = 50; // pixels from bottom
+            const isAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < threshold;
+            atBottomRef.current = isAtBottom;
+            setShowScrollButton(!isAtBottom);
+        }
+    };
+    
+    // Auto-scroll when new logs are added, but only if the user was already at the bottom.
+    React.useEffect(() => {
+        if (atBottomRef.current) {
+            scrollToBottom('auto');
+        }
+    }, [logGroups]);
+
     return (
         <main className="bg-black flex-1 flex flex-col h-full md:h-auto">
             <div className="p-4 border-b border-gray-700/50">
                  <h2 className="text-lg font-semibold text-white">Logs</h2>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+            <div className="flex-1 overflow-y-auto p-4 space-y-2 relative" ref={scrollContainerRef} onScroll={handleScroll}>
                 {error ? <ErrorDisplay error={error} /> :
                     (logGroups.length === 0 && !isAgentRunning) ? <WelcomeMessage /> :
                     logGroups.map((group, index) => (
@@ -39,6 +70,15 @@ export const LogsPanel: React.FC<{ logGroups: LogGroup[], isAgentRunning: boolea
                         />
                     ))
                 }
+                {showScrollButton && (
+                    <button
+                        onClick={() => scrollToBottom('smooth')}
+                        className="absolute bottom-6 right-6 z-10 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500 transition-opacity animate-fade-in"
+                        aria-label="Scroll to bottom"
+                    >
+                        <ChevronDownIcon className="w-6 h-6" />
+                    </button>
+                )}
             </div>
         </main>
     );
